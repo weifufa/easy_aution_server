@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    username: 'root'
+    password: "wff123456..."
+    url: jdbc:mysql://39.108.50.130:3306/easyaution_ums?useUnicode=true&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver

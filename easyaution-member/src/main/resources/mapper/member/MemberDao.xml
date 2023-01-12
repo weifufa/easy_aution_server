@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weifufa.easyaution.member.dao.MemberDao">
+
+    <!-- 可根据自己的需求，是否使用  -->
+    <resultMap id="memberMap" type="com.weifufa.easyaution.member.entity.MemberEntity">
+        <result property="id" column="id"></result>
+        <result property="username" column="username"></result>
+        <result property="password" column="password"></result>
+        <result property="nickname" column="nickname"></result>
+        <result property="mobile" column="mobile"></result>
+        <result property="email" column="email"></result>
+        <result property="header" column="header"></result>
+        <result property="gender" column="gender"></result>
+        <result property="birth" column="birth"></result>
+        <result property="city" column="city"></result>
+        <result property="job" column="job"></result>
+        <result property="sign" column="sign"></result>
+        <result property="sourceType" column="sourceType"></result>
+        <result property="status" column="status"></result>
+        <result property="createTime" column="createTime"></result>
+        <result property="socialUid" column="socialUid"></result>
+        <result property="accessToken" column="accessToken"></result>
+        <result property="expiresIn" column="expiresIn"></result>
+
+
+    </resultMap>
+    <select id="selectList" resultType="com.weifufa.easyaution.member.entity.MemberEntity">
+        select * from ums_member
+    </select>
+
+</mapper>
