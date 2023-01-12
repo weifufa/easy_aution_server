@@ -1,21 +1,13 @@
-package com.weifufa.easyaution.member.entity;
+package com.weifufa.easyaution.member.vo;
 
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 
-
-@Data
-@TableName("ums_member")
-public class MemberEntity implements Serializable {
-    private static final long serialVersionID=1L;
+public class MemberVo {
     /**
      * id
      */
-    @TableId
     private Long id;
     /**
      * 用户名
@@ -32,7 +24,7 @@ public class MemberEntity implements Serializable {
     /**
      * 手机号码
      */
-    private String phone;
+    private String mobile;
     /**
      * 邮箱
      */
@@ -86,6 +78,5 @@ public class MemberEntity implements Serializable {
      * 访问令牌的过期时间
      */
     private String expiresIn;
-
 
 }

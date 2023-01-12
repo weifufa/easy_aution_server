@@ -5,6 +5,7 @@ import com.weifufa.easyaution.member.entity.MemberEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -15,8 +16,10 @@ class EasyautionMemberApplicationTests {
     MemberDao memberDao;
     @Test
     void contextLoads() {
-        List<MemberEntity> memberEntities = memberDao.selectList();
-        System.out.println(memberEntities);
+        //密码要进行加密存储。加盐：$1$+8位字符
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encode = passwordEncoder.encode("123456");
+        System.out.println(encode);
     }
 
 }
