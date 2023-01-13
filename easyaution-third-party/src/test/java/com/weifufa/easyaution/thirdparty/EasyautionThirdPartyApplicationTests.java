@@ -1,10 +1,10 @@
-package com.weifufa.easyaution.auth;
+package com.weifufa.easyaution.thirdparty;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EasyautionAuthServerApplicationTests {
+class EasyautionThirdPartyApplicationTests {
 
     @Test
     void contextLoads() {

@@ -2,6 +2,7 @@ package com.weifufa.easyaution.member.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.weifufa.common.constant.MemberConstant;
 import com.weifufa.common.execption.BizCodeEnume;
 import com.weifufa.common.utils.R;
 import com.weifufa.easyaution.member.entity.MemberEntity;
@@ -10,10 +11,13 @@ import com.weifufa.easyaution.member.vo.MemberLoginVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("member")
@@ -21,7 +25,8 @@ import java.util.List;
 public class MemberController {
     @Autowired
     MemberService memberService;
-
+    @Autowired
+    StringRedisTemplate redisTemplate;
     @ApiOperation(value = "查询所有会员信息")
     @RequestMapping(method = RequestMethod.GET)
     public R selectAll() {
@@ -57,11 +62,29 @@ public class MemberController {
         } else {
             return R.error(BizCodeEnume.PHONE_NO_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_NO_EXIST_EXCEPTION.getMsg());
         }
-
     }
 
     @ApiOperation(value = "发送短信验证码")
+    @GetMapping("/sms/sendcode")
     public R sendCode(@PathParam("phone") String phone) {
+       String redisCode=redisTemplate.opsForValue().get(MemberConstant.SMS_CODE_CACHE_PREFIX+phone); //先去redis中获取验证码
+        if(!StringUtils.isEmpty(redisCode))//判断验证码是否存在，存在的话防止重复发送验证码
+        {
+            long l=Long.parseLong(redisCode.split("_")[1]);
+            if(System.currentTimeMillis()-l<60000)
+            {
+                //60秒不能再发
+                return R.error(BizCodeEnume.SMS_CODE_EXCEPTION.getCode(), BizCodeEnume.SMS_CODE_EXCEPTION.getMsg());
+            }
+        }
+        //准备发送验证码
+        String code=(int)((Math.random()*9+1)*100000)+"";//发送验证码
+        String redCode=code+"_"+System.currentTimeMillis();//存一个redis需要记录一个时间，后面防止多次发送验证码消息
+        //redis缓存验证码，防止同一个phone在60秒内再次发送验证码
+        redisTemplate.opsForValue().set(MemberConstant.SMS_CODE_CACHE_PREFIX+phone,redCode,10, TimeUnit.SECONDS); //这里先设置10分钟
+
+        //TODO 调用第三方服务
+
         return R.ok();
     }
 }
