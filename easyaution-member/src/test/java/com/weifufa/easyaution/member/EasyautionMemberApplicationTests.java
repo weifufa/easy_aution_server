@@ -16,10 +16,10 @@ class EasyautionMemberApplicationTests {
     MemberDao memberDao;
     @Test
     void contextLoads() {
-        //密码要进行加密存储。加盐：$1$+8位字符
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encode = passwordEncoder.encode("123456");
-        System.out.println(encode);
+//        //密码要进行加密存储。加盐：$1$+8位字符
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String encode = passwordEncoder.encode("123456");
+//        System.out.println(encode);
     }
 
 }

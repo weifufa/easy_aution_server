@@ -6,6 +6,7 @@ import com.weifufa.common.constant.MemberConstant;
 import com.weifufa.common.execption.BizCodeEnume;
 import com.weifufa.common.utils.R;
 import com.weifufa.easyaution.member.entity.MemberEntity;
+import com.weifufa.easyaution.member.feign.ThirdPartFeignService;
 import com.weifufa.easyaution.member.service.MemberService;
 import com.weifufa.easyaution.member.vo.MemberLoginVo;
 import io.swagger.annotations.Api;
@@ -27,6 +28,8 @@ public class MemberController {
     MemberService memberService;
     @Autowired
     StringRedisTemplate redisTemplate;
+    @Autowired
+    ThirdPartFeignService thirdPartFeignService;
     @ApiOperation(value = "查询所有会员信息")
     @RequestMapping(method = RequestMethod.GET)
     public R selectAll() {
@@ -83,8 +86,8 @@ public class MemberController {
         //redis缓存验证码，防止同一个phone在60秒内再次发送验证码
         redisTemplate.opsForValue().set(MemberConstant.SMS_CODE_CACHE_PREFIX+phone,redCode,10, TimeUnit.SECONDS); //这里先设置10分钟
 
-        //TODO 调用第三方服务
-
+       // //TODO 调用第三方服务
+        thirdPartFeignService.sendCode(phone,code);
         return R.ok();
     }
 }
