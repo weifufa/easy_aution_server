@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MemberLoginVo {
-    private String username;
-    private String password;
-    private String captcha;
+    private String username; //用户名
+    private String password; //密码
+    private String captcha; //验证码
 }

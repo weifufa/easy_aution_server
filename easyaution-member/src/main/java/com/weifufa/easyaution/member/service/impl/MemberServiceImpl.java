@@ -2,11 +2,17 @@ package com.weifufa.easyaution.member.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.weifufa.common.constant.MemberConstant;
+import com.weifufa.common.execption.BizCodeEnume;
+import com.weifufa.common.utils.R;
 import com.weifufa.easyaution.member.dao.MemberDao;
 import com.weifufa.easyaution.member.entity.MemberEntity;
 import com.weifufa.easyaution.member.service.MemberService;
 import com.weifufa.easyaution.member.vo.MemberLoginVo;
+import com.weifufa.easyaution.member.vo.MemberSmsLoginVo;
+import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,14 +22,19 @@ import java.util.List;
 
 @Service
 public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> implements MemberService {
-//    @Autowired
-//    MemberDao memberDao;
+    @Autowired
+    StringRedisTemplate redisTemplate;
     @Override
     public List<MemberEntity> selectAll() {
-        List<MemberEntity> list= new ArrayList<MemberEntity>();//        return memberDao.selectList();
+        List<MemberEntity> list= new ArrayList<MemberEntity>();
         return list;
     }
 
+    /**
+     * 登录
+     * @param vo
+     * @return
+     */
     @Override
     public MemberEntity login(MemberLoginVo vo) {
         String username=vo.getUsername();
@@ -54,5 +65,22 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
     public MemberEntity IsExitPhone(String phone) {
         if(StringUtils.isEmpty(phone))return null;
         return  this.getOne(new QueryWrapper<MemberEntity>().eq("phone", phone));
+    }
+
+    @Override
+    public R SmsLogin(MemberSmsLoginVo vo) {
+        MemberEntity entity=IsExitPhone(vo.getPhone()); //验证手机是否存在
+        if(entity==null)
+        {
+            return R.error(BizCodeEnume.PHONE_NO_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_NO_EXIST_EXCEPTION.getMsg());
+        }
+        //验证验证码是否过期
+        String redisCode=redisTemplate.opsForValue().get(MemberConstant.SMS_CODE_CACHE_PREFIX+vo.getPhone()); //先去redis中获取验证码
+        if(StringUtils.isEmpty(redisCode))//不存在就已经过期
+        {
+            return R.error(BizCodeEnume.SMS_CODE_EXPIRE.getCode(),BizCodeEnume.SMS_CODE_EXPIRE.getMsg());
+        }
+        //返回用户基本信息
+        return R.ok();
     }
 }

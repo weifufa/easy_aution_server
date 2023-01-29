@@ -9,6 +9,7 @@ import com.weifufa.easyaution.member.entity.MemberEntity;
 import com.weifufa.easyaution.member.feign.ThirdPartFeignService;
 import com.weifufa.easyaution.member.service.MemberService;
 import com.weifufa.easyaution.member.vo.MemberLoginVo;
+import com.weifufa.easyaution.member.vo.MemberSmsLoginVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,6 @@ public class MemberController {
     @ApiOperation(value = "查询所有会员信息")
     @RequestMapping(method = RequestMethod.GET)
     public R selectAll() {
-//        MemberEntity asd=new MemberEntity();
-//        asd.setUsername("测试");
-//        String username = asd.getUsername();
-//        System.out.println(username);
-        //  R r = R.ok().setData(list);
 
         List<MemberEntity> list = memberService.selectAll();
         R r = R.ok().put("data", list);
@@ -84,10 +80,18 @@ public class MemberController {
         String code=(int)((Math.random()*9+1)*100000)+"";//发送验证码
         String redCode=code+"_"+System.currentTimeMillis();//存一个redis需要记录一个时间，后面防止多次发送验证码消息
         //redis缓存验证码，防止同一个phone在60秒内再次发送验证码
-        redisTemplate.opsForValue().set(MemberConstant.SMS_CODE_CACHE_PREFIX+phone,redCode,10, TimeUnit.SECONDS); //这里先设置10分钟
+        redisTemplate.opsForValue().set(MemberConstant.SMS_CODE_CACHE_PREFIX+phone,redCode,10, TimeUnit.MINUTES); //这里先设置10分钟
 
        // //TODO 调用第三方服务
-        thirdPartFeignService.sendCode(phone,code);
+       // thirdPartFeignService.sendCode(phone,code);
         return R.ok();
+    }
+
+    @ApiOperation(value = "短信登录")
+    @PostMapping("/smslogin")
+    public R smsLogin(@RequestBody MemberSmsLoginVo vo)
+    {
+       R r=memberService.SmsLogin(vo);
+       return r;
     }
 }

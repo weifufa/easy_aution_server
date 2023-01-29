@@ -30,9 +30,12 @@ public enum BizCodeEnume {
 
 
     UNKNOW_EXCEPTION(10000, "系统位置异常"),
+
     VAILD_EXCEPTION(10001, "参数格式检验失败"),
+
     SMS_CODE_EXCEPTION(10001, "验证码获取评率太高，稍后再试"),
-    TO_MANY_REQUEST(10002, "请求流量过大"),
+    SMS_CODE_EXPIRE(10002, "短信验证码错误或已过期，请重新发送"),
+    TO_MANY_REQUEST(10003, "请求流量过大"),
     PRODUCT_UP_EXCEPTION(11000, "商品上架异常"),
 
 

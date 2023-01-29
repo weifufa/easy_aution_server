@@ -3,6 +3,7 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    alicloud:
       sms:
         host: https://miitangs09.market.alicloudapi.com
         path: /v1/tools/sms/code/sender
