@@ -16,3 +16,15 @@ spring:
             - Path=/api/member/**,
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment} #将api重写
+        - id: admin_route   #后台管理
+          uri: lb://easyaution-admin
+          predicates:
+            - Path=/api/**,
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment} #将api重写成renren-fast  路径不要写错
+#        - id: admin_route
+#          uri: lb://renren-fast
+#          predicates:
+#            - Path=/api/**
+#          filters: #路径重写
+#            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment} #将api重写成renren-fast  路径不要写错
