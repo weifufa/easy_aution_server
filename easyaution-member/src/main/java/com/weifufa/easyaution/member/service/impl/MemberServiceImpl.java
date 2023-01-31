@@ -1,9 +1,12 @@
 package com.weifufa.easyaution.member.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.weifufa.common.constant.MemberConstant;
 import com.weifufa.common.execption.BizCodeEnume;
+import com.weifufa.common.utils.PageUtils;
+import com.weifufa.common.utils.Query;
 import com.weifufa.common.utils.R;
 import com.weifufa.easyaution.member.dao.MemberDao;
 import com.weifufa.easyaution.member.entity.MemberEntity;
@@ -19,16 +22,13 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> implements MemberService {
+
     @Autowired
     StringRedisTemplate redisTemplate;
-    @Override
-    public List<MemberEntity> selectAll() {
-        List<MemberEntity> list= new ArrayList<MemberEntity>();
-        return list;
-    }
 
     /**
      * 登录
@@ -82,5 +82,14 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         }
         //返回用户基本信息
         return R.ok();
+    }
+
+    @Override
+    public PageUtils queryPage(Map<String, Object> params) {
+        IPage<MemberEntity> page=this.page(
+                new Query<MemberEntity>().getPage(params),
+                new QueryWrapper<MemberEntity>()
+        );
+        return new PageUtils(page);
     }
 }

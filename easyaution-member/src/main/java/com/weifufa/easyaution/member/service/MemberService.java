@@ -5,11 +5,18 @@ import com.weifufa.common.utils.R;
 import com.weifufa.easyaution.member.entity.MemberEntity;
 import com.weifufa.easyaution.member.vo.MemberLoginVo;
 import com.weifufa.easyaution.member.vo.MemberSmsLoginVo;
-
+import com.weifufa.common.utils.PageUtils;
 import java.util.List;
+import java.util.Map;
 
+/**
+ *
+ *
+ * @author weifufa
+ * @email wff66@foxmail.com
+ * @date 2023-01-31 20:10:22
+ */
 public interface MemberService  extends IService<MemberEntity> {
-  List<MemberEntity> selectAll();
 
   /**
    * 登录
@@ -31,4 +38,7 @@ public interface MemberService  extends IService<MemberEntity> {
    * @return
    */
     R SmsLogin(MemberSmsLoginVo vo);
+
+  PageUtils queryPage(Map<String, Object> params);
 }
+

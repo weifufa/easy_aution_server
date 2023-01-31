@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.weifufa.common.constant.MemberConstant;
 import com.weifufa.common.execption.BizCodeEnume;
+import com.weifufa.common.utils.PageUtils;
 import com.weifufa.common.utils.R;
 import com.weifufa.easyaution.member.entity.MemberEntity;
 import com.weifufa.easyaution.member.feign.ThirdPartFeignService;
@@ -18,7 +19,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -31,15 +34,60 @@ public class MemberController {
     StringRedisTemplate redisTemplate;
     @Autowired
     ThirdPartFeignService thirdPartFeignService;
-    @ApiOperation(value = "查询所有会员信息")
-    @RequestMapping(method = RequestMethod.GET)
-    public R selectAll() {
 
-        List<MemberEntity> list = memberService.selectAll();
-        R r = R.ok().put("data", list);
-        return r;
+    /**
+     * 列表
+     */
+    @ApiOperation(value = "获取会员列表")
+    @RequestMapping("/list")
+    public R list(@RequestParam Map<String, Object> params){
+        PageUtils page = memberService.queryPage(params);
+        return R.ok().put("page", page);
     }
 
+
+    /**
+     * 信息
+     */
+    @ApiOperation(value = "根据Id获取会员信息")
+    @RequestMapping("/info/{id}")
+    public R info(@PathVariable("id") Long id){
+        MemberEntity Member = memberService.getById(id);
+
+        return R.ok().put("Member", Member);
+    }
+
+    /**
+     * 保存
+     */
+    @ApiOperation(value = "保存会员信息")
+    @RequestMapping("/save")
+    public R save(@RequestBody MemberEntity Member){
+        memberService.save(Member);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @ApiOperation(value = "修改会员信息")
+    @RequestMapping("/update")
+    public R update(@RequestBody MemberEntity Member){
+        memberService.updateById(Member);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @ApiOperation(value = "删除会员信息")
+    @RequestMapping("/delete")
+    public R delete(@RequestBody Long[] ids){
+        memberService.removeByIds(Arrays.asList(ids));
+        return R.ok();
+    }
     @ApiOperation(value = "用户密码登录")
     @PostMapping("/login")
     public R login(@RequestBody MemberLoginVo vo) {
