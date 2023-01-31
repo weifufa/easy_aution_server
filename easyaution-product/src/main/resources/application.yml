@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://39.108.50.130/easyaution_pms?useUnicode=true&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 39.108.50.130
+    port: 6379
+  profiles:
+    active: local #将密码配置到这个文件中，不上传到git

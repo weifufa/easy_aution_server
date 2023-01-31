@@ -16,6 +16,12 @@ spring:
             - Path=/api/member/**,
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment} #将api重写
+        - id: product_route   #会员服务
+          uri: lb://easyaution-product
+          predicates:
+            - Path=/api/product/**,
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment} #将api重写
         - id: admin_route   #后台管理
           uri: lb://easyaution-admin
           predicates:
