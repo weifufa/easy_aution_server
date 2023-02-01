@@ -7,3 +7,10 @@ spring:
     port: 6379
   profiles:
     active: local #将密码配置到这个文件中，不上传到git
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto #使用自增组件
+      logic-delete-value: 0
+      logic-not-delete-value: 1
