@@ -3,6 +3,8 @@ package com.weifufa.easyaution.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.weifufa.common.valid.AddGroup;
+import com.weifufa.common.valid.UpdateGroup;
 import com.weifufa.common.valid.UpdateStatusGroup;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +32,7 @@ import com.weifufa.common.utils.R;
 
 @RestController
 @RequestMapping("product/category")
-@Api(tags = "类别管理", value = "商品的分类管理") //类说明
+@Api(tags = "类别管理", value = "拍品的分类管理") //类说明
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
@@ -74,11 +76,15 @@ public class CategoryController {
      */
     @ApiOperation(value = "修改类别列表")
     @RequestMapping("/update")
-    public R update(@RequestBody CategoryEntity category) {
+    public R update(@Validated({AddGroup.class, UpdateGroup.class}) @RequestBody CategoryEntity category) {
         categoryService.updateById(category);
 
         return R.ok();
     }
+
+    /**
+     * 修改状态
+     */
 
     @ApiOperation(value = "分类修改状态")
     @RequestMapping("/update/status")
@@ -86,9 +92,6 @@ public class CategoryController {
         categoryService.updateById(category);
         return R.ok();
     }
-    /**
-     * 修改状态
-     */
 
     /**
      * 删除

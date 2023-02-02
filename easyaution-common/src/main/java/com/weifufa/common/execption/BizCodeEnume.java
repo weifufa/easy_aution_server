@@ -22,6 +22,7 @@ package com.weifufa.common.execption;
 public enum BizCodeEnume {
 
     USER_EXIST_EXCEPTION(15001, "用户存在"),
+
     LOGINACCT_PASSWORD_INVAILD_EXCEPTION(15002, "账号密码错误"),
     PHONE_EXIST_EXCEPTION(15003, "手机号存在"),
     PHONE_NO_EXIST_EXCEPTION(15004, "手机号不存在"),
