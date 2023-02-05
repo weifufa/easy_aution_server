@@ -6,16 +6,21 @@ import com.weifufa.common.constant.MemberConstant;
 import com.weifufa.common.execption.BizCodeEnume;
 import com.weifufa.common.utils.PageUtils;
 import com.weifufa.common.utils.R;
+import com.weifufa.common.valid.AddGroup;
 import com.weifufa.easyaution.member.entity.MemberEntity;
+import com.weifufa.easyaution.member.exception.PhoneExistException;
+import com.weifufa.easyaution.member.exception.UsernameExistException;
 import com.weifufa.easyaution.member.feign.ThirdPartFeignService;
 import com.weifufa.easyaution.member.service.MemberService;
 import com.weifufa.easyaution.member.vo.MemberLoginVo;
+import com.weifufa.easyaution.member.vo.MemberResVo;
 import com.weifufa.easyaution.member.vo.MemberSmsLoginVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -103,7 +108,7 @@ public class MemberController {
     @ApiOperation(value = "查询手机号是否存在")
     @GetMapping("/isexitphone")
     public R isExitPhone(@PathParam("phone") String phone) {
-        MemberEntity entity = memberService.IsExitPhone(phone);
+        MemberEntity entity = memberService.isExitPhone(phone);
         if (entity != null) {
             return R.ok(BizCodeEnume.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_EXIST_EXCEPTION.getMsg());
         } else {
@@ -139,7 +144,22 @@ public class MemberController {
     @PostMapping("/smslogin")
     public R smsLogin(@RequestBody MemberSmsLoginVo vo)
     {
-       R r=memberService.SmsLogin(vo);
+       R r=memberService.smsLogin(vo);
        return r;
+    }
+
+    @ApiOperation(value = "用户注册")
+    @PostMapping("/register")
+    public R register(@Validated({AddGroup.class}) @RequestBody MemberResVo vo)
+    {
+        R r=null;
+        try {
+            r = memberService.register(vo);
+        } catch (PhoneExistException e) {
+            return R.error(BizCodeEnume.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_EXIST_EXCEPTION.getMsg());
+        } catch (UsernameExistException e) {
+            return R.error(BizCodeEnume.USER_EXIST_EXCEPTION.getCode(), BizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
+        }
+        return r;
     }
 }

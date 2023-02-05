@@ -12,6 +12,7 @@ import com.weifufa.easyaution.member.dao.MemberDao;
 import com.weifufa.easyaution.member.entity.MemberEntity;
 import com.weifufa.easyaution.member.service.MemberService;
 import com.weifufa.easyaution.member.vo.MemberLoginVo;
+import com.weifufa.easyaution.member.vo.MemberResVo;
 import com.weifufa.easyaution.member.vo.MemberSmsLoginVo;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
     @Autowired
     StringRedisTemplate redisTemplate;
-
+    @Autowired
+    MemberDao memberDao;
     /**
      * 登录
      * @param vo
@@ -39,7 +41,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
     public MemberEntity login(MemberLoginVo vo) {
         String username=vo.getUsername();
         String password=vo.getPassword();
-        MemberEntity entity=this.baseMapper.selectOne(new QueryWrapper<MemberEntity>().eq("username",username));
+        //根据用户名或者手机号或者邮箱登录
+        MemberEntity entity=this.baseMapper.selectOne(new QueryWrapper<MemberEntity>().eq("username",username).or().eq("phone",username).or().eq("email",username));
         if(entity==null)
         {
             //登录失败
@@ -62,14 +65,14 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
     }
 
     @Override
-    public MemberEntity IsExitPhone(String phone) {
+    public MemberEntity isExitPhone(String phone) {
         if(StringUtils.isEmpty(phone))return null;
         return  this.getOne(new QueryWrapper<MemberEntity>().eq("phone", phone));
     }
 
     @Override
-    public R SmsLogin(MemberSmsLoginVo vo) {
-        MemberEntity entity=IsExitPhone(vo.getPhone()); //验证手机是否存在
+    public R smsLogin(MemberSmsLoginVo vo) {
+        MemberEntity entity=isExitPhone(vo.getPhone()); //验证手机是否存在
         if(entity==null)
         {
             return R.error(BizCodeEnume.PHONE_NO_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_NO_EXIST_EXCEPTION.getMsg());
@@ -80,7 +83,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         {
             return R.error(BizCodeEnume.SMS_CODE_EXPIRE.getCode(),BizCodeEnume.SMS_CODE_EXPIRE.getMsg());
         }
-        //返回用户基本信息
+
+       //TODO 返回用户基本信息
         return R.ok();
     }
 
@@ -91,5 +95,44 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
                 new QueryWrapper<MemberEntity>()
         );
         return new PageUtils(page);
+    }
+
+    @Override
+    public R register(MemberResVo vo) {
+        MemberDao memberDao = this.baseMapper;
+        MemberEntity entity = new MemberEntity();
+        //验证验证码是否过期
+        String redisCode=redisTemplate.opsForValue().get(MemberConstant.SMS_CODE_CACHE_PREFIX+vo.getPhone()); //先去redis中获取验证码
+        if(StringUtils.isEmpty(redisCode))//不存在就已经过期
+        {
+           return R.error(BizCodeEnume.SMS_CODE_EXPIRE.getCode(),BizCodeEnume.SMS_CODE_EXPIRE.getMsg());
+        }
+
+        //判断用户是否存在
+        MemberEntity userEntity = this.getOne(new QueryWrapper<MemberEntity>().eq("username", vo.getUsername()));
+        if(userEntity!=null)
+        {
+            return R.error(BizCodeEnume.USER_EXIST_EXCEPTION.getCode(),BizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
+        }
+
+        //判断邮箱是否存在
+        MemberEntity emailEntity = this.getOne(new QueryWrapper<MemberEntity>().eq("email", vo.getEmail()));
+        if(emailEntity!=null)
+        {
+            return R.error(BizCodeEnume.EMALI_EXIST_EXCEPTION.getCode(),BizCodeEnume.EMALI_EXIST_EXCEPTION.getMsg());
+        }
+        //盐值加密
+        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+        String code=passwordEncoder.encode(vo.getPassword());
+
+        //保存用户信息
+        entity.setUsername(vo.getUsername());
+        entity.setEmail(vo.getEmail());
+        entity.setPassword(code);
+        entity.setPhone(vo.getPhone());
+        memberDao.insert(entity);
+        redisTemplate.delete(MemberConstant.SMS_CODE_CACHE_PREFIX+vo.getPhone());//删除短信验证码
+        //TODO 返回用户基本信息
+        return R.ok();
     }
 }

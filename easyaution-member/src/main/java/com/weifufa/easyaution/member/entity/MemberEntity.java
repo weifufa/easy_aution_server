@@ -1,9 +1,13 @@
 package com.weifufa.easyaution.member.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.weifufa.common.valid.AddGroup;
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -86,6 +90,5 @@ public class MemberEntity implements Serializable {
      * 访问令牌的过期时间
      */
     private String expiresIn;
-
 
 }
