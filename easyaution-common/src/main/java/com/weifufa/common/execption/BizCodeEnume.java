@@ -27,11 +27,7 @@ public enum BizCodeEnume {
     PHONE_NO_EXIST_EXCEPTION(15004, "手机号不存在"),
     EMALI_EXIST_EXCEPTION(15005, "邮箱已存在"),
 
-
-
-
     UNKNOW_EXCEPTION(10000, "系统位置异常"),
-
     VAILD_EXCEPTION(10001, "参数格式检验失败"),
 
     SMS_CODE_EXCEPTION(10001, "验证码获取评率太高，稍后再试"),
@@ -39,8 +35,13 @@ public enum BizCodeEnume {
     TO_MANY_REQUEST(10003, "请求流量过大"),
     PRODUCT_UP_EXCEPTION(11000, "商品上架异常"),
 
+    NO_STOCK_EXCEPTION(21000, "商品库存不足"),
+    INVALID_SIGN_EXCEPTION(30001, "无效签名"),
+    TOKEN_EXPIRE_EXCEPTION(30002, "token过期"),
+    TOKEN_DIFFER_EXCEPTION(30003, "token过期"),
+    TOKEN_INVALID_EXCEPTION(30004, "token无效");
 
-    NO_STOCK_EXCEPTION(21000,"商品库存不足");
+
     private int code;
     private String msg;
 

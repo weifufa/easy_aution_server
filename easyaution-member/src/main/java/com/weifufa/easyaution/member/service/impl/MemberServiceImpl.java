@@ -84,8 +84,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             return R.error(BizCodeEnume.SMS_CODE_EXPIRE.getCode(),BizCodeEnume.SMS_CODE_EXPIRE.getMsg());
         }
 
+        
        //TODO 返回用户基本信息
-        return R.ok();
+        return R.ok().setData(entity);
     }
 
     @Override
@@ -132,7 +133,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         entity.setPhone(vo.getPhone());
         memberDao.insert(entity);
         redisTemplate.delete(MemberConstant.SMS_CODE_CACHE_PREFIX+vo.getPhone());//删除短信验证码
-        //TODO 返回用户基本信息
-        return R.ok();
+        //返回用户基本信息
+        return R.ok().setData(entity);
     }
 }
