@@ -1,15 +1,15 @@
 <template>
   <el-dialog :title="!dataForm.catId ? '新增' : '修改'" :close-on-click-modal="false" :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
-      label-width="80px">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
       <el-form-item label="分类名称" prop="name">
         <el-input v-model="dataForm.name" placeholder="分类名称"></el-input>
       </el-form-item>
-      <el-form-item label="是否显示" prop="showStatus">
-        <el-input v-model="dataForm.showStatus" placeholder="是否显示"></el-input>
+      <el-form-item label="显示状态" prop="showStatus">
+        <el-switch v-model="dataForm.showStatus" active-color="#13ce66" inactive-color="#ff4949" :active-value="1"
+          :inactive-value="0"></el-switch>
       </el-form-item>
       <el-form-item label="排序" prop="sort">
-        <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
+        <el-input v-model.number="dataForm.sort" placeholder="排序"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -40,10 +40,25 @@ export default {
           { required: true, message: '分类名称不能为空', trigger: 'blur' }
         ],
         showStatus: [
-          { required: true, message: '是否显示[0-不显示，1显示]不能为空', trigger: 'blur' }
+          {
+            required: true,
+            message: "显示状态[0-不显示；1-显示]不能为空",
+            trigger: "blur"
+          }
         ],
         sort: [
-          { required: true, message: '排序不能为空', trigger: 'blur' }
+          {
+            validator: (rule, value, callback) => {
+              if (value == "") {
+                callback(new Error("排序字段必须填写"));
+              } else if (!Number.isInteger(value) || value < 0) {
+                callback(new Error("排序必须是一个大于等于0的整数"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
         ]
       }
     }
