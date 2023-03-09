@@ -39,9 +39,9 @@ public enum BizCodeEnume {
     INVALID_SIGN_EXCEPTION(30001, "无效签名"),
     TOKEN_EXPIRE_EXCEPTION(30002, "token过期"),
     TOKEN_DIFFER_EXCEPTION(30003, "token过期"),
-    TOKEN_INVALID_EXCEPTION(30004, "token无效");
+    TOKEN_INVALID_EXCEPTION(30004, "token无效"),
 
-
+    CAPTCHA_EXCEPTION(40001, "图形验证码不正确");
     private int code;
     private String msg;
 

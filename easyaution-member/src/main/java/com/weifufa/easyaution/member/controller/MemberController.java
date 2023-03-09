@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -108,6 +109,13 @@ public class MemberController {
     @ApiOperation(value = "用户密码登录")
     @PostMapping("/login")
     public R login(HttpServletResponse response, @RequestBody MemberLoginVo vo) {
+        //验证图形码是否正确
+        String captcha = redisTemplate.opsForValue().get(vo.getUuid());
+        if(StringUtils.isEmpty(vo.getCaptcha())||(!vo.getCaptcha().equals(captcha)))
+        {
+            return R.error(BizCodeEnume.CAPTCHA_EXCEPTION.getCode(), BizCodeEnume.CAPTCHA_EXCEPTION.getMsg());
+        }
+        int i=10/0;
         MemberEntity entity = memberService.login(vo);
         if (entity != null) {
             //生成JWT令牌
@@ -118,7 +126,7 @@ public class MemberController {
             String token = JWTUtil.getToken(payload);
             response.setHeader("Authorization", token);//存到响应体
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
-            return R.ok();
+            return R.ok().setData(entity);
         } else {
             return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(), BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
         }
