@@ -1,5 +1,7 @@
 package com.weifufa.easyaution.product.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -30,6 +32,10 @@ public class AuctionEntity implements Serializable {
 	 */
 	private String auctionName;
 	/**
+	 * 所属分类
+	 */
+	private Integer categoryId;
+	/**
 	 * 拍卖数量
 	 */
 	private String auctionAmount;
@@ -50,16 +56,30 @@ public class AuctionEntity implements Serializable {
 	 */
 	private Integer auctionState;
 	/**
-	 * 结束时间
+	 * 拍卖结束时间
 	 */
-	private Date endTime;
+	private Date auctionEndTime;
+	/**
+	 * 拍卖开始时间
+	 */
+	private Date auctionStartTime;
 	/**
 	 * 发布时间
 	 */
+	@TableField(fill= FieldFill.INSERT)
 	private Date createTime;
 	/**
 	 * 修改时间
 	 */
+	@TableField(fill= FieldFill.INSERT_UPDATE)
 	private Date updateTime;
+	/**
+	 * 备注
+	 */
+	private String remark;
+	/**
+	 * 图片
+	 */
+	private String images;
 
 }

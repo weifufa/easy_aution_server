@@ -26,7 +26,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         QueryWrapper<CategoryEntity> queryWrapper=new QueryWrapper<>();
         if(!StringUtils.isEmpty(key))
         {
-            queryWrapper.eq("name",key);
+            queryWrapper.like("name",key);
         }
         IPage<CategoryEntity> page = this.page(
                 new Query<CategoryEntity>().getPage(params),

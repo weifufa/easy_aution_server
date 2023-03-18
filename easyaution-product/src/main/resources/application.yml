@@ -7,6 +7,8 @@ spring:
     port: 6379
   profiles:
     active: local #将密码配置到这个文件中，不上传到git
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss #指定日期格式输出
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:

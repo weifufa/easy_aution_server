@@ -29,6 +29,6 @@ public class EasyautionExceptionControllerAdvice {
     public R handleException(Throwable throwable)
     {
         log.error("错误",throwable);
-        return R.error(BizCodeEnume.VAILD_EXCEPTION.getCode(),BizCodeEnume.VAILD_EXCEPTION.getMsg());
+        return R.error(BizCodeEnume.VAILD_EXCEPTION.getCode(),throwable.getMessage());
     }
 }

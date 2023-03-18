@@ -1,5 +1,6 @@
 package com.weifufa.easyaution.product.service.impl;
 
+import com.weifufa.easyaution.product.entity.CategoryEntity;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -11,6 +12,7 @@ import com.weifufa.common.utils.Query;
 import com.weifufa.easyaution.product.dao.AuctionDao;
 import com.weifufa.easyaution.product.entity.AuctionEntity;
 import com.weifufa.easyaution.product.service.AuctionService;
+import org.springframework.util.StringUtils;
 
 
 @Service("auctionService")
@@ -18,11 +20,17 @@ public class AuctionServiceImpl extends ServiceImpl<AuctionDao, AuctionEntity> i
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        //1.获取key
+        String key=(String) params.get("key");
+        QueryWrapper<AuctionEntity> queryWrapper=new QueryWrapper<>();
+        if(!StringUtils.isEmpty(key))
+        {
+            queryWrapper.like("action_name",key);
+        }
         IPage<AuctionEntity> page = this.page(
                 new Query<AuctionEntity>().getPage(params),
-                new QueryWrapper<AuctionEntity>()
+                queryWrapper.orderByDesc("create_time")
         );
-
         return new PageUtils(page);
     }
 

@@ -10,6 +10,9 @@ spring:
         smsSignId: "0000"
         smsTemplateNo: #模板
         appcode: 45bc08b803c84e47bf7ae93903e68301
+      oss:
+        endpoint: oss-cn-shenzhen.aliyuncs.com
+        bucket: wff-auction-bucket
 
   profiles:
     active: local #将密码配置到这个文件中，不上传到git

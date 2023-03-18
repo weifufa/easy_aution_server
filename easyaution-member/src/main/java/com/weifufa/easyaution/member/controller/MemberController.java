@@ -115,7 +115,6 @@ public class MemberController {
         {
             return R.error(BizCodeEnume.CAPTCHA_EXCEPTION.getCode(), BizCodeEnume.CAPTCHA_EXCEPTION.getMsg());
         }
-        int i=10/0;
         MemberEntity entity = memberService.login(vo);
         if (entity != null) {
             //生成JWT令牌

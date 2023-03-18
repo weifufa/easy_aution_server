@@ -12,9 +12,13 @@
         <result property="auctionNumber" column="auction_number"/>
         <result property="maxPrice" column="max_price"/>
         <result property="auctionState" column="auction_state"/>
-        <result property="endTime" column="end_time"/>
+        <result property="auctionEndTime" column="auction_end_time"/>
+        <result property="auctionStartTime" column="auction_start_time"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="images" column="images"/>
+        <result property="categoryId" column="category_id"/>
     </resultMap>
 
 
