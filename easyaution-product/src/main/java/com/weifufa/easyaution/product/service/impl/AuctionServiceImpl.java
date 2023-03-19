@@ -25,7 +25,12 @@ public class AuctionServiceImpl extends ServiceImpl<AuctionDao, AuctionEntity> i
         QueryWrapper<AuctionEntity> queryWrapper=new QueryWrapper<>();
         if(!StringUtils.isEmpty(key))
         {
-            queryWrapper.like("action_name",key);
+            queryWrapper.like("auction_name",key);
+        }
+        String state=(String)params.get("state");
+        if(!StringUtils.isEmpty(state))
+        {
+            queryWrapper.eq("auction_state",Integer.parseInt(state));
         }
         IPage<AuctionEntity> page = this.page(
                 new Query<AuctionEntity>().getPage(params),

@@ -2,6 +2,7 @@ package com.weifufa.easyaution.product.controller;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import io.swagger.annotations.Api;
@@ -44,7 +45,6 @@ public class AuctionController {
 
         return R.ok().put("page", page);
     }
-
 
     /**
      * 信息

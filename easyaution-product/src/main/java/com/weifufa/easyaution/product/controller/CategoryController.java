@@ -1,11 +1,13 @@
 package com.weifufa.easyaution.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.weifufa.common.valid.AddGroup;
 import com.weifufa.common.valid.UpdateGroup;
 import com.weifufa.common.valid.UpdateStatusGroup;
+import com.weifufa.easyaution.product.entity.AuctionEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,15 @@ public class CategoryController {
         return R.ok().put("page", page);
     }
 
-
+    /**
+     * 查出所有分类列表
+     */
+    @ApiOperation(value = "获取分类列表")
+    @RequestMapping("/list/all")
+    public R list(){
+        List<CategoryEntity> list = categoryService.list();
+        return R.ok().put("data", list);
+    }
     /**
      * 信息
      */
