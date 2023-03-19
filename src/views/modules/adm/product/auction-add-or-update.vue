@@ -3,6 +3,7 @@
     :title="!dataForm.auctionId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible"
+    @closed="dialogClose"
   >
     <el-form
       :model="dataForm"
@@ -20,7 +21,7 @@
       <el-form-item label="文字描述" prop="remark" style="width: 400px">
         <el-input type="textarea" v-model="dataForm.remark"></el-input>
       </el-form-item>
-      <el-form-item label="拍品图片">
+      <el-form-item label="拍品图片" prop="images">
         <multi-upload v-model="dataForm.images"></multi-upload>
       </el-form-item>
       <el-form-item label="拍卖数量" prop="auctionAmount">
@@ -41,20 +42,29 @@
           placeholder="请输入价格"
         ></el-input>
       </el-form-item>
+      <el-form-item label="分类选择" prop="categoryId" style="width: 280px">
+        <category-cascader
+          :categoryId.sync="dataForm.categoryId"
+          @changeCatId="getChangeCatId"
+        ></category-cascader>
+      </el-form-item>
       <el-form-item label="开拍时间" prop="auctionStartTime">
         <el-date-picker
           v-model="dataForm.auctionStartTime"
           type="datetime"
           placeholder="选择日期时间"
+          value-format="yyyy-MM-dd HH:mm:ss"
           @change="startTimeChange"
         >
         </el-date-picker>
       </el-form-item>
+
       <el-form-item label="结束时间" prop="auctionEndTime">
         <el-date-picker
           v-model="dataForm.auctionEndTime"
           type="datetime"
           placeholder="选择日期时间"
+          value-format="yyyy-MM-dd HH:mm:ss"
           @change="endTimeChange"
         >
         </el-date-picker>
@@ -69,15 +79,17 @@
 
 <script>
 import MultiUpload from "@/components/upload/multiUpload";
+import CategoryCascader from "@/components/common/category-cascader";
 export default {
-  components: { MultiUpload },
+  components: { MultiUpload, CategoryCascader },
   data() {
     return {
       visible: false,
       dataForm: {
         remark: "",
+        categoryId: null,
         images: [],
-        auctionId: 0,
+        auctionId: "",
         auctionName: "",
         auctionAmount: "",
         startPrice: "",
@@ -106,6 +118,12 @@ export default {
         remark: [
           { required: true, message: "请填写拍品说明", trigger: "blur" },
         ],
+        images: [
+          { required: true, message: "请上传拍品图片", trigger: "blur" },
+        ],
+        categoryId: [
+          { required: true, message: "请选择分类", trigger: "blur" },
+        ],
       },
     };
   },
@@ -125,14 +143,13 @@ export default {
           }).then(({ data }) => {
             if (data && data.code === 0) {
               this.dataForm.auctionName = data.auction.auctionName;
+              this.dataForm.remark = data.auction.remark;
               this.dataForm.auctionAmount = data.auction.auctionAmount;
               this.dataForm.startPrice = data.auction.startPrice;
-              this.dataForm.auctionNumber = data.auction.auctionNumber;
-              this.dataForm.maxPrice = data.auction.maxPrice;
-              this.dataForm.auctionState = data.auction.auctionState;
-              this.dataForm.endTime = data.auction.endTime;
-              this.dataForm.createTime = data.auction.createTime;
-              this.dataForm.updateTime = data.auction.updateTime;
+              this.dataForm.auctionStartTime = data.auction.auctionStartTime;
+              this.dataForm.auctionEndTime = data.auction.auctionEndTime;
+              this.dataForm.images = JSON.parse(data.auction.images);
+              this.dataForm.categoryId = data.auction.categoryId;
             }
           });
         }
@@ -159,6 +176,7 @@ export default {
               auctionStartTime: this.dataForm.auctionStartTime,
               remark: this.dataForm.remark,
               images: JSON.stringify(this.dataForm.images),
+              categoryId: this.dataForm.categoryId,
             }),
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -183,7 +201,6 @@ export default {
         this.dataForm.auctionEndTime &&
         this.dataForm.auctionStartTime >= this.dataForm.auctionEndTime
       ) {
-        debugger;
         this.$message.error("开始时间不能大于等结束时间");
         this.dataForm.auctionStartTime = "";
       }
@@ -193,10 +210,18 @@ export default {
         this.dataForm.auctionStartTime &&
         this.dataForm.auctionEndTime <= this.dataForm.auctionStartTime
       ) {
-        debugger;
         this.$message.error("结束时间不能小于等于开始时间");
         this.dataForm.auctionEndTime = "";
       }
+    },
+    getChangeCatId(val) {
+      debugger;
+      this.dataForm.categoryId = val;
+    },
+    dialogClose() {
+      this.dataForm = {};
+      this.dataForm.images = [];
+      this.$refs.dataForm.resetFields(); //清除数据
     },
   },
 };

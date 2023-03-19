@@ -12,6 +12,18 @@
           clearable
         ></el-input>
       </el-form-item>
+      <el-form-item label="状态">
+        <el-select
+          v-model="dataForm.state"
+          @change="getDataList()"
+          placeholder="请选择状态"
+        >
+         <el-option label="查询全部" value=""></el-option>
+          <el-option label="未开始" value="0"></el-option>
+          <el-option label="竞拍中" value="1"></el-option>
+          <el-option label="已结束" value="2"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
         <el-button type="primary" @click="addOrUpdateHandle()">新增</el-button>
@@ -37,12 +49,7 @@
         width="50"
       >
       </el-table-column>
-      <el-table-column
-        prop="auctionId"
-        header-align="center"
-        align="center"
-        label="拍品id"
-      >
+      <el-table-column type="index" width="50" label="序号" align="center">
       </el-table-column>
       <el-table-column
         prop="auctionName"
@@ -88,13 +95,12 @@
         <template slot-scope="scope">
           <el-tag
             :type="
-              scope.row.auctionState == '0'
+              scope.row.auctionState == 0
                 ? ''
                 : scope.row.auctionState == '1'
                 ? 'success'
                 : 'info'
             "
-            :effect="dark"
           >
             {{
               scope.row.auctionState == 0
@@ -171,6 +177,7 @@ export default {
   data() {
     return {
       dataForm: {
+        state: "",
         key: "",
       },
       dataList: [],
@@ -199,6 +206,7 @@ export default {
           page: this.pageIndex,
           limit: this.pageSize,
           key: this.dataForm.key,
+          state: this.dataForm.state,
         }),
       }).then(({ data }) => {
         if (data && data.code === 0) {

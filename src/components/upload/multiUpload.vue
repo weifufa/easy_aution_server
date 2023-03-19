@@ -25,7 +25,7 @@ import { getUUID } from "@/utils";
 export default {
   name: "multiUpload",
   props: {
-    //图片属性数组dsadsa
+    //图片属性数组
     value: Array,
     //最大上传图片数量
     maxCount: {
@@ -54,7 +54,6 @@ export default {
       for (let i = 0; i < this.value.length; i++) {
         fileList.push({ url: this.value[i] });
       }
-
       return fileList;
     },
   },
