@@ -69,9 +69,9 @@ public class MemberController {
     @ApiOperation(value = "根据Id获取会员信息")
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id) {
-        MemberEntity Member = memberService.getById(id);
-
-        return R.ok().put("Member", Member);
+        MemberEntity member = memberService.getById(id);
+        member.setPassword("");
+        return R.ok().put("Member", member);
     }
 
     /**
@@ -111,8 +111,7 @@ public class MemberController {
     public R login(HttpServletResponse response, @RequestBody MemberLoginVo vo) {
         //验证图形码是否正确
         String captcha = redisTemplate.opsForValue().get(vo.getUuid());
-        if(StringUtils.isEmpty(vo.getCaptcha())||(!vo.getCaptcha().equals(captcha)))
-        {
+        if (StringUtils.isEmpty(vo.getCaptcha()) || (!vo.getCaptcha().equals(captcha))) {
             return R.error(BizCodeEnume.CAPTCHA_EXCEPTION.getCode(), BizCodeEnume.CAPTCHA_EXCEPTION.getMsg());
         }
         MemberEntity entity = memberService.login(vo);

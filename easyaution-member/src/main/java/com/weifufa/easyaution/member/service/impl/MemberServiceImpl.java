@@ -91,9 +91,16 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        //1.获取key
+        String key=(String) params.get("key");
+        QueryWrapper<MemberEntity> queryWrapper=new QueryWrapper<>();
+        if(!StringUtils.isEmpty(key))
+        {
+            queryWrapper.like("username",key);
+        }
         IPage<MemberEntity> page=this.page(
                 new Query<MemberEntity>().getPage(params),
-                new QueryWrapper<MemberEntity>()
+                queryWrapper
         );
         return new PageUtils(page);
     }
