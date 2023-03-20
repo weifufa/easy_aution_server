@@ -17,7 +17,7 @@
       </el-form-item>
       <el-form-item label="头像" prop="header" style="width: 280px">
         <single-upload
-          v-model="dataForm.header"
+          :imageUrl="dataForm.header"
           @input="getHeader"
         ></single-upload>
       </el-form-item>
@@ -29,8 +29,13 @@
       </el-form-item>
       <el-form-item label="性别" style="width: 280px">
         <el-select v-model="dataForm.gender" placeholder="请选择性别">
-          <el-option label="男" value="0"></el-option>
-          <el-option label="女" value="1"></el-option>
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -52,6 +57,7 @@ export default {
       } else if (!/\d{3}/.test(value)) {
         return callback(new Error("用户名长度必须大于3"));
       }
+      return callback();
     };
     var validateEmail = (rule, value, callback) => {
       if (!value) {
@@ -59,6 +65,7 @@ export default {
       } else if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value)) {
         return callback(new Error("请填写正确邮箱"));
       }
+      return callback();
     };
     var validatePhone = (rule, value, callback) => {
       if (!value) {
@@ -66,9 +73,20 @@ export default {
       } else if (!/0?(13|14|15|18)[0-9]{9}/.test(value)) {
         return callback(new Error("手机号不正确"));
       }
+      return callback();
     };
     return {
       visible: false,
+      options: [
+        {
+          value: 0,
+          label: "男",
+        },
+        {
+          value: 1,
+          label: "女",
+        },
+      ],
       dataForm: {
         id: 0,
         username: "",
@@ -115,11 +133,12 @@ export default {
             params: this.$http.adornParams(),
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.username = data.umsMember.username;
-              this.dataForm.nickname = data.umsMember.nickname;
-              this.dataForm.phone = data.umsMember.phone;
-              this.dataForm.email = data.umsMember.email;
-              this.dataForm.gender = data.umsMember.gender;
+              this.dataForm.username = data.Member.username;
+              this.dataForm.nickname = data.Member.nickname;
+              this.dataForm.phone = data.Member.phone;
+              this.dataForm.email = data.Member.email;
+              this.dataForm.gender = data.Member.gender;
+              this.dataForm.header = data.Member.header;
             }
           });
         }
@@ -127,6 +146,7 @@ export default {
     },
     // 表单提交
     dataFormSubmit() {
+      debugger;
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           this.$http({
@@ -137,10 +157,10 @@ export default {
             data: this.$http.adornData({
               id: this.dataForm.id || undefined,
               username: this.dataForm.username,
-              nickname: this.dataForm.nickname,
               phone: this.dataForm.phone,
               email: this.dataForm.email,
               gender: this.dataForm.gender,
+              header: this.dataForm.header,
             }),
           }).then(({ data }) => {
             if (data && data.code === 0) {
@@ -157,12 +177,13 @@ export default {
               this.$message.error(data.msg);
             }
           });
+        } else {
+          console.log("失败");
         }
       });
     },
     getHeader(val) {
-      console.log(val);
-      this.header = val;
+      this.dataForm.header = val;
     },
   },
 };

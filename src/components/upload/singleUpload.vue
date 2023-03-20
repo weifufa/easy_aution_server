@@ -36,6 +36,12 @@
 import { policy } from "./policy";
 import { getUUID } from "@/utils";
 export default {
+  props: {
+    imageUrl: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
       dataObj: {
@@ -46,12 +52,10 @@ export default {
         dir: "",
         host: "",
       },
-      imageUrl: "",
     };
   },
   methods: {
     handleAvatarSuccess(res, file) {
-      debugger;
       this.imageUrl =
         this.dataObj.host +
         "/" +
@@ -59,7 +63,6 @@ export default {
       this.$emit("input", this.imageUrl);
     },
     beforeAvatarUpload(file) {
-      debugger;
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
