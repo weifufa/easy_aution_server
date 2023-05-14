@@ -157,6 +157,8 @@ export default {
     },
     // 表单提交
     dataFormSubmit() {
+      debugger;
+      console.log(this.dataForm.images);
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           this.$http({
@@ -215,7 +217,6 @@ export default {
       }
     },
     getChangeCatId(val) {
-      debugger;
       this.dataForm.categoryId = val;
     },
     dialogClose() {

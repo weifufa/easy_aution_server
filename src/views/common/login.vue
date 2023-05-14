@@ -156,7 +156,7 @@
       top: 0;
       right: 0;
       padding: 150px 60px 180px;
-      width: 470px;
+      width: 369px;
       min-height: 100%;
       background-color: #fff;
     }
