@@ -5,8 +5,8 @@ MAINTAINER feisjy/ChenHongRui <veryrui@gmail.com>
 # 数据卷
 VOLUME /tmp/data
 
-ADD ./easyaution-gateway/target/easyaution-gateway-1.0.0.jar /app.jar
-
+#ADD ./easyaution-gateway/target/easyaution-gateway-1.0.0.jar /app.jar
+ADD ./easyaution-gateway/easyaution-gateway-1.0.0.jar /app.jar
 
 
 
