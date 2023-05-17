@@ -1,0 +1,51 @@
+kind: pipeline
+type: docker
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: Maven编译
+    image: maven:3-jdk-8
+    volumes:
+      - name: cache
+        path: /root/.m2
+    commands:
+      - mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+  #
+  - name: 构建easyaution_gateway
+    image: plugins/docker
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+    settings:
+      dockerfile: ruoyi-modules/qianhai-api/Dockerfile
+      insecure: true
+      username: 韦fufa
+      password: aliyun123456
+      registry:  registry.cn-hangzhou.aliyuncs.com
+      repo: registry.cn-hangzhou.aliyuncs.com/weifufa/easyaution_gateway
+      tags: 1.0.0
+  - name: 构建easyaution_product
+    image: plugins/docker
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+    settings:
+      dockerfile: ruoyi-modules/qianhai-api/Dockerfile
+      insecure: true
+      username: 韦fufa
+      password: aliyun123456
+      registry:  registry.cn-hangzhou.aliyuncs.com
+      repo: registry.cn-hangzhou.aliyuncs.com/weifufa/easyaution_product
+      tags: 1.0.0
+volumes:
+  - name: cache
+    host:
+      path: /data/maven/data/.m2
+  - name: docker
+    host:
+      path: /var/run/docker.sock
+
