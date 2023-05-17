@@ -21,7 +21,7 @@ steps:
       - name: docker
         path: /var/run/docker.sock
     settings:
-      dockerfile: ruoyi-modules/qianhai-api/Dockerfile
+      dockerfile: easy_aution_server/easyaution-gateway/Dockerfile
       insecure: true
       username: 韦fufa
       password: aliyun123456
@@ -34,7 +34,7 @@ steps:
       - name: docker
         path: /var/run/docker.sock
     settings:
-      dockerfile: ruoyi-modules/qianhai-api/Dockerfile
+      dockerfile: easy_aution_server/easyaution-product/Dockerfile
       insecure: true
       username: 韦fufa
       password: aliyun123456
