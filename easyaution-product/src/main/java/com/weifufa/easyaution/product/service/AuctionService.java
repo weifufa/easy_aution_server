@@ -3,7 +3,9 @@ package com.weifufa.easyaution.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.weifufa.common.utils.PageUtils;
 import com.weifufa.easyaution.product.entity.AuctionEntity;
+import com.weifufa.easyaution.product.vo.QueryParam;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,8 @@ import java.util.Map;
 public interface AuctionService extends IService<AuctionEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    //查询未开拍的拍品
+    List<AuctionEntity> getNotStartAuction(QueryParam param);
 }
 

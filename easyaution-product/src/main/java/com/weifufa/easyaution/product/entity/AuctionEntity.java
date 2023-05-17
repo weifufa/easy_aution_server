@@ -81,5 +81,10 @@ public class AuctionEntity implements Serializable {
 	 * 图片
 	 */
 	private String images;
+	/**
+	 * 图片数组
+	 */
+	@TableField(exist = false)
+	private String[] imageArray;
 
 }

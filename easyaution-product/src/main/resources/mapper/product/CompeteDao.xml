@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weifufa.easyaution.product.dao.CompeteDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.weifufa.easyaution.product.entity.CompeteEntity" id="competeMap">
+        <result property="Id" column="id"/>
+        <result property="auctionId" column="auction_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="bid" column="bid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <select id="selectByAuctionIdAndUserPhone" resultType="com.weifufa.easyaution.product.entity.CompeteEntity">
+        select * from pms_compete where auction_id=#{auctionId} and user_phone=#{userPhone}
+    </select>
+
+
+</mapper>

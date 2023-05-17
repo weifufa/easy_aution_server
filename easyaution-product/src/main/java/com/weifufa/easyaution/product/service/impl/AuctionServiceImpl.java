@@ -1,7 +1,13 @@
 package com.weifufa.easyaution.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
 import com.weifufa.easyaution.product.entity.CategoryEntity;
+import com.weifufa.easyaution.product.vo.QueryParam;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -37,6 +43,26 @@ public class AuctionServiceImpl extends ServiceImpl<AuctionDao, AuctionEntity> i
                 queryWrapper.orderByDesc("create_time")
         );
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<AuctionEntity> getNotStartAuction(QueryParam param) {
+        QueryWrapper<AuctionEntity> queryWrapper=new QueryWrapper<>();
+       queryWrapper.eq("auction_state", 0).orderByDesc("create_time");
+        List<AuctionEntity> list = this.list(queryWrapper);
+        for (AuctionEntity auctionEntity : list) {
+            try {
+                JSONArray jsonArray = JSON.parseArray(auctionEntity.getImages()); //将图片字符串转换成json数组
+                String[] array = new String[jsonArray.size()];
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    array[i] = jsonArray.getString(i);
+                }
+                auctionEntity.setImageArray(array);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
     }
 
 }

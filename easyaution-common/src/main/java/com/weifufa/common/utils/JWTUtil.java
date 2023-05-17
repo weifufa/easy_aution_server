@@ -66,7 +66,6 @@ public class JWTUtil {
         //System.out.println("⽤⼾手机号：" + phone);
         return phone;
     }
-
     public static String createJwt(String phone) {
         //生成JWT令牌
         Map<String, String> map = new HashMap<>();

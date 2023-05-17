@@ -99,6 +99,7 @@
             <artifactId>kaptcha</artifactId>
             <version>0.0.9</version>
         </dependency>
+
     </dependencies>
 <dependencyManagement>
 <dependencies>

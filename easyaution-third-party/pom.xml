@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.weifufa.easyaution</groupId>
     <artifactId>easyaution-third-party</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>easyaution-third-party</name>
     <description>第三方短信，存储等服务</description>
     <properties>
