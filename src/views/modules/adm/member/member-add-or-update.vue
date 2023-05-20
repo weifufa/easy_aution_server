@@ -16,10 +16,7 @@
         <el-input v-model="dataForm.username" placeholder="用户名"></el-input>
       </el-form-item>
       <el-form-item label="头像" prop="header" style="width: 280px">
-        <single-upload
-          :imageUrl="dataForm.header"
-          @input="getHeader"
-        ></single-upload>
+        <single-upload :imageUrl="dataForm.header" @input="getHeader"></single-upload>
       </el-form-item>
       <el-form-item label="手机号" prop="phone" style="width: 280px">
         <el-input v-model="dataForm.phone" placeholder="手机号"></el-input>
@@ -34,8 +31,7 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -54,8 +50,6 @@ export default {
     var validateUserName = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("用户名不能为空"));
-      } else if (!/\d{3}/.test(value)) {
-        return callback(new Error("用户名长度必须大于3"));
       }
       return callback();
     };
@@ -80,12 +74,12 @@ export default {
       options: [
         {
           value: 0,
-          label: "男",
+          label: "男"
         },
         {
           value: 1,
-          label: "女",
-        },
+          label: "女"
+        }
       ],
       dataForm: {
         id: 0,
@@ -95,29 +89,29 @@ export default {
         phone: "",
         email: "",
         gender: "",
-        header: "",
+        header: ""
       },
       dataRule: {
         username: [
           {
             trigger: "blur",
-            validator: validateUserName,
-          },
+            validator: validateUserName
+          }
         ],
         email: [
           {
             trigger: "blur",
-            validator: validateEmail,
-          },
+            validator: validateEmail
+          }
         ],
         gender: [{ required: true, message: "请选择性别", trigger: "blur" }],
         phone: [
           {
             trigger: "blur",
-            validator: validatePhone,
-          },
-        ],
-      },
+            validator: validatePhone
+          }
+        ]
+      }
     };
   },
   methods: {
@@ -130,7 +124,7 @@ export default {
           this.$http({
             url: this.$http.adornUrl(`/member/info/${this.dataForm.id}`),
             method: "get",
-            params: this.$http.adornParams(),
+            params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
               this.dataForm.username = data.Member.username;
@@ -147,7 +141,7 @@ export default {
     // 表单提交
     dataFormSubmit() {
       debugger;
-      this.$refs["dataForm"].validate((valid) => {
+      this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
@@ -160,8 +154,8 @@ export default {
               phone: this.dataForm.phone,
               email: this.dataForm.email,
               gender: this.dataForm.gender,
-              header: this.dataForm.header,
-            }),
+              header: this.dataForm.header
+            })
           }).then(({ data }) => {
             if (data && data.code === 0) {
               this.$message({
@@ -171,7 +165,7 @@ export default {
                 onClose: () => {
                   this.visible = false;
                   this.$emit("refreshDataList");
-                },
+                }
               });
             } else {
               this.$message.error(data.msg);
@@ -184,7 +178,7 @@ export default {
     },
     getHeader(val) {
       this.dataForm.header = val;
-    },
-  },
+    }
+  }
 };
 </script>

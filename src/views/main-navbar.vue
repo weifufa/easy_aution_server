@@ -3,7 +3,7 @@
     <div class="site-navbar__header">
       <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
         <a class="site-navbar__brand-lg" href="javascript:;">易拍卖后台管理</a>
-        <a class="site-navbar__brand-mini" href="javascript:;">人人</a>
+        <a class="site-navbar__brand-mini" href="javascript:;">易</a>
       </h1>
     </div>
     <div class="site-navbar__body clearfix">
@@ -30,11 +30,12 @@
           <el-menu-item index="2-1"><a href="https://github.com/renrenio/renren-fast-vue" target="_blank">前端</a></el-menu-item>
           <el-menu-item index="2-2"><a href="https://gitee.com/renrenio/renren-fast" target="_blank">后台</a></el-menu-item>
           <el-menu-item index="2-3"><a href="https://gitee.com/renrenio/renren-generator" target="_blank">代码生成器</a></el-menu-item>
-        </el-submenu> -->
+        </el-submenu>-->
         <el-menu-item class="site-navbar__avatar" index="3">
           <el-dropdown :show-timeout="0" placement="bottom">
             <span class="el-dropdown-link">
-              <img src="~@/assets/img/avatar.png" :alt="userName">{{ userName }}
+              <img src="~@/assets/img/avatar.png" :alt="userName" />
+              {{ userName }}
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item @click.native="updatePasswordHandle()">修改密码</el-dropdown-item>
@@ -50,60 +51,74 @@
 </template>
 
 <script>
-import UpdatePassword from './main-navbar-update-password'
-import { clearLoginInfo } from '@/utils'
+import UpdatePassword from "./main-navbar-update-password";
+import { clearLoginInfo } from "@/utils";
 export default {
   data() {
     return {
       updatePassowrdVisible: false
-    }
+    };
   },
   components: {
     UpdatePassword
   },
   computed: {
     navbarLayoutType: {
-      get() { return this.$store.state.common.navbarLayoutType }
+      get() {
+        return this.$store.state.common.navbarLayoutType;
+      }
     },
     sidebarFold: {
-      get() { return this.$store.state.common.sidebarFold },
-      set(val) { this.$store.commit('common/updateSidebarFold', val) }
+      get() {
+        return this.$store.state.common.sidebarFold;
+      },
+      set(val) {
+        this.$store.commit("common/updateSidebarFold", val);
+      }
     },
     mainTabs: {
-      get() { return this.$store.state.common.mainTabs },
-      set(val) { this.$store.commit('common/updateMainTabs', val) }
+      get() {
+        return this.$store.state.common.mainTabs;
+      },
+      set(val) {
+        this.$store.commit("common/updateMainTabs", val);
+      }
     },
     userName: {
-      get() { return this.$store.state.user.name }
+      get() {
+        return this.$store.state.user.name;
+      }
     }
   },
   methods: {
     // 修改密码
     updatePasswordHandle() {
-      this.updatePassowrdVisible = true
+      this.updatePassowrdVisible = true;
       this.$nextTick(() => {
-        this.$refs.updatePassowrd.init()
-      })
+        this.$refs.updatePassowrd.init();
+      });
     },
     // 退出
     logoutHandle() {
-      this.$confirm(`确定进行[退出]操作?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http({
-          url: this.$http.adornUrl('/sys/logout'),
-          method: 'post',
-          data: this.$http.adornData()
-        }).then(({ data }) => {
-          if (data && data.code === 0) {
-            clearLoginInfo()
-            this.$router.push({ name: 'login' })
-          }
+      this.$confirm(`确定进行[退出]操作?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$http({
+            url: this.$http.adornUrl("/sys/logout"),
+            method: "post",
+            data: this.$http.adornData()
+          }).then(({ data }) => {
+            if (data && data.code === 0) {
+              clearLoginInfo();
+              this.$router.push({ name: "login" });
+            }
+          });
         })
-      }).catch(() => { })
+        .catch(() => {});
     }
   }
-}
+};
 </script>

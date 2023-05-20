@@ -52,17 +52,10 @@
       </el-table-column>
 
       <el-table-column
-        prop="autionName"
+        prop="auctionName"
         header-align="center"
         align="center"
         label="拍品名称"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="seller"
-        header-align="center"
-        align="center"
-        label="卖家"
       >
       </el-table-column>
       <el-table-column
@@ -80,7 +73,7 @@
       >
         <template slot-scope="scope">
           <el-tag :type="scope.row.orderState == '0' ? 'success' : 'info'">
-            {{ scope.row.orderState == "0" ? "交易成功" : "交易失败" }}</el-tag
+            {{ scope.row.orderState == "0" ? "待发货" : scope.row.orderState == "0" ? "交易成功":"交易失败"}}</el-tag
           >
         </template>
       </el-table-column>

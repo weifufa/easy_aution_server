@@ -1,24 +1,12 @@
 <template>
   <div class="mod-config">
-    <el-form
-      :inline="true"
-      :model="dataForm"
-      @keyup.enter.native="getDataList()"
-    >
+    <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input
-          v-model="dataForm.key"
-          placeholder="参数名"
-          clearable
-        ></el-input>
+        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select
-          v-model="dataForm.state"
-          @change="getDataList()"
-          placeholder="请选择状态"
-        >
-         <el-option label="查询全部" value=""></el-option>
+        <el-select v-model="dataForm.state" @change="getDataList()" placeholder="请选择状态">
+          <el-option label="查询全部" value></el-option>
           <el-option label="未开始" value="0"></el-option>
           <el-option label="竞拍中" value="1"></el-option>
           <el-option label="已结束" value="2"></el-option>
@@ -31,8 +19,7 @@
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
-          >批量删除</el-button
-        >
+        >批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -42,56 +29,20 @@
       @selection-change="selectionChangeHandle"
       style="width: 100%"
     >
-      <el-table-column
-        type="selection"
-        header-align="center"
-        align="center"
-        width="50"
-      >
-      </el-table-column>
-      <el-table-column type="index" width="50" label="序号" align="center">
-      </el-table-column>
-      <el-table-column
-        prop="auctionName"
-        header-align="center"
-        align="center"
-        label="拍卖品名称"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="auctionAmount"
-        header-align="center"
-        align="center"
-        label="拍卖数量"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="startPrice"
-        header-align="center"
-        align="center"
-        label="起拍价"
-      >
-      </el-table-column>
-      <el-table-column
+      <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
+      <el-table-column type="index" width="50" label="序号" align="center"></el-table-column>
+      <el-table-column prop="auctionName" header-align="center" align="center" label="拍卖品名称"></el-table-column>
+      <el-table-column prop="auctionAmount" header-align="center" align="center" label="拍卖数量"></el-table-column>
+      <el-table-column prop="startPrice" header-align="center" align="center" label="起拍价"></el-table-column>
+      <!-- <el-table-column
         prop="auctionNumber"
         header-align="center"
         align="center"
         label="竞拍次数"
       >
-      </el-table-column>
-      <el-table-column
-        prop="maxPrice"
-        header-align="center"
-        align="center"
-        label="最高价"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="auctionState"
-        header-align="center"
-        align="center"
-        label="竞拍状态"
-      >
+      </el-table-column>-->
+      <el-table-column prop="maxPrice" header-align="center" align="center" label="成交价"></el-table-column>
+      <el-table-column prop="auctionState" header-align="center" align="center" label="竞拍状态">
         <template slot-scope="scope">
           <el-tag
             :type="
@@ -103,13 +54,14 @@
             "
           >
             {{
-              scope.row.auctionState == 0
-                ? "未开拍"
-                : scope.row.auctionState == 1
-                ? "竞拍中"
-                : "已结束"
-            }}</el-tag
-          >
+            scope.row.auctionState == 0
+            ? "未开拍"
+            : scope.row.auctionState == 1
+            ? "竞拍中"
+            : scope.row.auctionState == 2
+            ? "已结束":"流拍"
+            }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -118,37 +70,19 @@
         align="center"
         value-format="yyyy-MM-dd HH:mm:ss"
         label="开始时间"
-      >
-      </el-table-column>
+      ></el-table-column>
       <el-table-column
         prop="auctionEndTime"
         header-align="center"
         align="center"
         value-format="yyyy-MM-dd HH:mm:ss"
         label="结束时间"
-      >
-      </el-table-column>
+      ></el-table-column>
 
-      <el-table-column
-        fixed="right"
-        header-align="center"
-        align="center"
-        width="150"
-        label="操作"
-      >
+      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
         <template slot-scope="scope">
-          <el-button
-            type="text"
-            size="small"
-            @click="addOrUpdateHandle(scope.row.auctionId)"
-            >修改</el-button
-          >
-          <el-button
-            type="text"
-            size="small"
-            @click="deleteHandle(scope.row.auctionId)"
-            >删除</el-button
-          >
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.auctionId)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.auctionId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -160,14 +94,9 @@
       :page-size="pageSize"
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper"
-    >
-    </el-pagination>
+    ></el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update
-      v-if="addOrUpdateVisible"
-      ref="addOrUpdate"
-      @refreshDataList="getDataList"
-    ></add-or-update>
+    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
   </div>
 </template>
 
@@ -178,7 +107,7 @@ export default {
     return {
       dataForm: {
         state: "",
-        key: "",
+        key: ""
       },
       dataList: [],
       pageIndex: 1,
@@ -186,11 +115,11 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false,
+      addOrUpdateVisible: false
     };
   },
   components: {
-    AddOrUpdate,
+    AddOrUpdate
   },
   activated() {
     this.getDataList();
@@ -206,8 +135,8 @@ export default {
           page: this.pageIndex,
           limit: this.pageSize,
           key: this.dataForm.key,
-          state: this.dataForm.state,
-        }),
+          state: this.dataForm.state
+        })
       }).then(({ data }) => {
         if (data && data.code === 0) {
           this.dataList = data.page.list;
@@ -245,7 +174,7 @@ export default {
     deleteHandle(id) {
       var ids = id
         ? [id]
-        : this.dataListSelections.map((item) => {
+        : this.dataListSelections.map(item => {
             return item.auctionId;
           });
       this.$confirm(
@@ -254,13 +183,13 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          type: "warning"
         }
       ).then(() => {
         this.$http({
           url: this.$http.adornUrl("/product/auction/delete"),
           method: "post",
-          data: this.$http.adornData(ids, false),
+          data: this.$http.adornData(ids, false)
         }).then(({ data }) => {
           if (data && data.code === 0) {
             this.$message({
@@ -269,14 +198,14 @@ export default {
               duration: 1500,
               onClose: () => {
                 this.getDataList();
-              },
+              }
             });
           } else {
             this.$message.error(data.msg);
           }
         });
       });
-    },
-  },
+    }
+  }
 };
 </script>
